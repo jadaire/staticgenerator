@@ -2,26 +2,34 @@ import unittest
 
 from textnode import TextNode, TextType, text_node_to_html_node
 
+
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
-        node = TextNode("This is a text node", TextType.BOLD)
+        node = TextNode("This is a text node", TextType.TEXT)
+        node2 = TextNode("This is a text node", TextType.TEXT)
+        self.assertEqual(node, node2)
+
+    def test_eq_false(self):
+        node = TextNode("This is a text node", TextType.TEXT)
         node2 = TextNode("This is a text node", TextType.BOLD)
-        self.assertEqual(node, node2)
-    
-    def text_not_eq(self):
-        node = TextNode("This is great", TextType.ITALIC)
-        node2 = TextNode("This is not great", TextType.ITALIC)
-        self.assertEqual(node, node2)
-    
-    def type_not_eq(self):
-        node = TextNode("This is a text node", TextType.CODE)
-        node2 = TextNode("This is a text node", TextType.LINK)
-        self.assertEqual(node, node2)
-    
-    def all_eq(self):
+        self.assertNotEqual(node, node2)
+
+    def test_eq_false2(self):
+        node = TextNode("This is a text node", TextType.TEXT)
+        node2 = TextNode("This is a text node2", TextType.TEXT)
+        self.assertNotEqual(node, node2)
+
+    def test_eq_url(self):
         node = TextNode("This is a text node", TextType.TEXT, "https://www.boot.dev")
         node2 = TextNode("This is a text node", TextType.TEXT, "https://www.boot.dev")
         self.assertEqual(node, node2)
+
+    def test_repr(self):
+        node = TextNode("This is a text node", TextType.TEXT, "https://www.boot.dev")
+        self.assertEqual(
+            "TextNode(This is a text node, text, https://www.boot.dev)", repr(node)
+        )
+
 
 class TestTextNodeToHTMLNode(unittest.TestCase):
     def test_text(self):
@@ -45,6 +53,7 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "b")
         self.assertEqual(html_node.value, "This is bold")
+
 
 if __name__ == "__main__":
     unittest.main()
